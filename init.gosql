@@ -1,7 +1,28 @@
-create database "Utilisateurs"
-create table "Joueurs" in "Utilisateurs"
+create database "LeagueOfLegend"
+create table "Champions" in "LeagueOfLegend"
 (
-    "ID": Int,
+    "id": Int,
     "name": String,
-    "money": Float,
+    "description": String
+)
+create table "Items" in "LeagueOfLegend"
+(
+    "id": Int,
+    "name": String,
+    "description": String
+)
+
+create database "Valorant"
+create table "Agents" in "Valorant"
+(
+    "id": Int,
+    "name": String,
+    "role": String,
+    "description": String
+)
+create table "Map" in "Valorant"
+(
+    "id": Int,
+    "name": String,
+    "description": String
 )

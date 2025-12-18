@@ -1,0 +1,8 @@
+{
+  "columns": {
+    "description": "String",
+    "id": "Int",
+    "name": "String"
+  },
+  "table": "Champions"
+}

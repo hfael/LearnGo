@@ -1,0 +1,9 @@
+{
+  "columns": {
+    "description": "String",
+    "id": "Int",
+    "name": "String",
+    "role": "String"
+  },
+  "table": "Agents"
+}
