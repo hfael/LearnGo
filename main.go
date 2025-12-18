@@ -1,37 +1,50 @@
 package main
 
 import (
-	"fmt"
-	"io"
+	"bufio"
+	"errors"
 	"os"
+	"strings"
 )
 
-func executeInit(initPath string) error {
-	ok, err := exists(initPath)
+func execute(path string) error {
+	f, err := os.Open(path)
 	if err != nil {
 		return err
 	}
+	defer f.Close()
 
-	if ok {
-		fmt.Println("Fichier existant ! " + initPath + ".")
+	scanner := bufio.NewScanner(f)
+	lineNo := 0
 
-		fmt.Println("Lecture de " + initPath + " en cours...")
-
-		f, err := os.Open(initPath)
-		if err != nil {
-			panic(err)
+	for scanner.Scan() {
+		lineNo++
+		line := strings.TrimSpace(scanner.Text())
+		if line == "" {
+			continue
 		}
-		defer f.Close()
-		content, err := io.ReadAll(f)
-		if err != nil {
-			panic(err)
+		if err := executeLine(line); err != nil {
+			return errors.New("ligne " + itoa(lineNo) + ": " + err.Error())
 		}
-		fmt.Println("Content: ", content)
-		return nil
+	}
+	if err := scanner.Err(); err != nil {
+		return err
 	}
 	return nil
 }
 
+func executeLine(line string) error {
+	parts := strings.Fields(line)
+	key := parts[0] + " " + parts[1]
+	handler, ok := handlers[key]
+	if !ok {
+		return errors.New("instruction inconnu")
+	}
+	return handler(parts)
+}
+
 func main() {
-	executeInit("init.gosql")
+	if err := execute("init.gosql"); err != nil {
+		panic(err)
+	}
 }

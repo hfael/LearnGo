@@ -1,2 +1,7 @@
-create database "PlayerData"
-create table "Joueurs" in "PlayerData"
+create database "Utilisateurs"
+create table "Joueurs" in "Utilisateurs"
+(
+    "ID": Int,
+    "name": String,
+    "money": Float,
+)
