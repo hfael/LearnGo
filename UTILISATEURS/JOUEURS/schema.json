@@ -1,0 +1,8 @@
+{
+  "columns": {
+    "ID": "Int",
+    "money": "Float",
+    "name": "String"
+  },
+  "table": "Joueurs"
+}

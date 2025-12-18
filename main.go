@@ -34,12 +34,39 @@ func execute(path string) error {
 }
 
 func executeLine(line string) error {
+
+	line = strings.TrimSpace(line)
+
+	if line == "(" {
+		collectSchema = true
+		return nil
+	}
+
+	if line == ")" {
+		if !collectSchema {
+			return ErrInvalidSyntax
+		}
+		collectSchema = false
+		return writeSchema()
+	}
+
+	if collectSchema {
+		return parseColumn(line)
+	}
+
 	parts := strings.Fields(line)
+
+	if len(parts) < 2 {
+		return ErrInvalidSyntax
+	}
+
 	key := parts[0] + " " + parts[1]
+
 	handler, ok := handlers[key]
 	if !ok {
 		return errors.New("instruction inconnu")
 	}
+
 	return handler(parts)
 }
 

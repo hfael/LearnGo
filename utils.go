@@ -1,9 +1,10 @@
 package main
 
 import (
+	"encoding/json"
 	"errors"
-	"fmt"
 	"os"
+	"path/filepath"
 	"strconv"
 	"strings"
 )
@@ -18,37 +19,80 @@ var handlers = map[string]Handler{
 	"create table":    handlerCreateTable,
 }
 
+var (
+	currentTable    string
+	currentDatabase string
+	collectSchema   bool
+	schemaColumns   = map[string]string{}
+)
+
 func handlerCreateDatabase(parts []string) error {
-	if len(parts) != 3 {
 
-		fmt.Println("3")
-		return ErrInvalidSyntax
+	name := strings.Trim(parts[2], `"`)
+	path := strings.ToUpper(name)
+
+	err := os.MkdirAll(path, 0775)
+	if err != nil {
 	}
-
-	database_name := strings.Trim(parts[2], `"`)
-	if database_name == "" {
-
-		fmt.Println("4")
-		return ErrInvalidSyntax
-	}
-
-	return os.Mkdir(strings.ToUpper(database_name), 0775)
+	return err
 }
 
 func handlerCreateTable(parts []string) error {
-	if len(parts) != 5 {
-		fmt.Println("1")
+
+	currentTable = strings.Trim(parts[2], `"`)
+	currentDatabase = strings.Trim(parts[4], `"`)
+
+	schemaColumns = make(map[string]string)
+	collectSchema = false
+
+	path := filepath.Join(
+		strings.ToUpper(currentDatabase),
+		strings.ToUpper(currentTable),
+	)
+
+	err := os.MkdirAll(path, 0775)
+	if err != nil {
+	}
+	return err
+}
+
+func parseColumn(line string) error {
+
+	line = strings.TrimSuffix(strings.TrimSpace(line), ",")
+
+	parts := strings.Split(line, ":")
+	if len(parts) != 2 {
 		return ErrInvalidSyntax
 	}
-	tableName := strings.Trim(parts[2], `"`)
-	databaseName := strings.Trim(parts[4], `"`)
 
-	if tableName == "" || databaseName == "" {
+	name := strings.Trim(parts[0], `" `)
+	typ := strings.TrimSpace(parts[1])
 
-		fmt.Println("2")
-		return ErrInvalidSyntax
+	schemaColumns[name] = typ
+	return nil
+}
+
+func writeSchema() error {
+	path := filepath.Join(
+		strings.ToUpper(currentDatabase),
+		strings.ToUpper(currentTable),
+		"schema.json",
+	)
+
+	b, err := json.MarshalIndent(map[string]any{
+		"table":   currentTable,
+		"columns": schemaColumns,
+	}, "", "  ")
+
+	if err != nil {
+		return err
 	}
-	return os.Mkdir(strings.ToUpper(databaseName)+"\\"+strings.ToUpper(tableName), 0775)
+
+	err = os.WriteFile(path, b, 0644)
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 func itoa(i int) string {
