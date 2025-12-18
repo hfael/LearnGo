@@ -26,3 +26,11 @@ create table "Map" in "Valorant"
     "name": String,
     "description": String
 )
+
+insert into "Agents" in "Valorant" values "id"=1 "name"="Sage" "role"="Sentinel" "description"="Sage_soigne_les_allié(e)s"
+insert into "Agents" in "Valorant" values "id"=2 "name"="Jett" "role"="Duelist" "description"="Experte_en_mobilité_et_assassinats_rapides"
+insert into "Agents" in "Valorant" values "id"=3 "name"="Phoenix" "role"="Duelist" "description"="Manipule_le_feu_pour_attaquer_et_se_soigner"
+insert into "Agents" in "Valorant" values "id"=4 "name"="Brimstone" "role"="Controller" "description"="Contrôle_le_champ_de_bataille_avec_fumigènes"
+insert into "Agents" in "Valorant" values "id"=5 "name"="Sova" "role"="Initiator" "description"="Repérage_et_reconnaissance_à_longue_portée"
+insert into "Agents" in "Valorant" values "id"=6 "name"="Viper" "role"="Controller" "description"="Utilise_des_gaz_toxiques_pour_contrôler_l’espace"
+insert into "Agents" in "Valorant" values "id"=7 "name"="Cypher" "role"="Sentinel" "description"="Collecte_des_informations_et_piège_les_ennemis"
