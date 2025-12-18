@@ -1,0 +1,2 @@
+create database "PlayerData"
+create table "Joueurs" in "PlayerData"
